@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="google" value="notranslate">
+  <title> - </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+  <style>
+  @import url('https://fonts.googleapis.com/css?family=Open+Sans');
+  @import url('https://fonts.googleapis.com/css?family=Montserrat:900&display=swap');
+
+  body { background-color: rgb(243,242,247); }
+
+  .fancy-h1 {
+    margin: 0;
+    padding: 0px 25px;
+    color: snow;
+    text-align: center;
+    font-size: 50px;
+    font-family: Montserrat;
+    letter-spacing: 3px;
+    line-height: 1.25;
+    -webkit-text-stroke-width: 1.5px;
+    -webkit-text-stroke-color: violet;
+    text-shadow: -3px 3px 6px rgba(0,0,0,0.15);
+  }
+
+  .fancy-h2 {
+    margin: 0 0 25px 0;
+    color: snow;
+    font-size: 40px;
+    font-family: Montserrat;
+    letter-spacing: 1px;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #61DAFB;
+    text-shadow: -2px 2px 4px rgba(0,0,0,0.15);
+  }
+
+  .article {
+    margin: 0 auto 50px auto;
+    padding: 25px;
+    background-color: #FFF;
+    border: 2px solid #61DAFB;
+    border-radius: 25px;
+  }
+
+  pre {
+    width: 90%;
+    margin: 0 auto 50px auto;
+    font-size: 16px;
+    background-color: rgb(240,240,240);
+    border: 2px solid #333;
+    border-radius: 25px;
+    overflow:scroll;
+  }
+
+  li {
+    margin-bottom: 15px;
+  }
+  </style>
+</head>
+
+
+<!-- ===========================================================================
+
+============================================================================ -->
+
+
+<body>
+  <header>
+    <h1 class="fancy-h1 my-5">Lighten & Darken:</h1>
+  </header>
+
+
+  <!-- =========================================================================
+
+  ========================================================================== -->
+
+
+  <main>
+    <div class="container">
+      <article id="article-1" class="article">
+        <h2 class="fancy-h2">Overview:</h2>
+
+
+        <pre><code>
+  lightenDarkenColor(<em>color</em>, <em>amount</em>);
+        </code></pre>
+
+
+        <p>This function can take in a a hex string or an rgb string for <code><em>color</em></code>.
+        To lighten use a positive integer as the <code><em>amount</em></code>.
+        To darken use a negative integer as the <code><em>amount</em></code>.
+        Amounts can range from <code>0</code> to <code>255</code>.
+        Numbers outside of that range will be brought back to either <code>0</code> or <code>255</code>.</p>
+
+
+        <p>Hex values can use the <code>#xxx</code> syntax, but must be a string value, and must have a <code>#</code>.
+        For example, <code>'#FC0'</code> or <code>'#FFCC00'</code>.
+        RGB string values can be written as <code>'rgb(xxx, xxx, xxx)'</code>, <code>'rgb(x,xxx,xx)'</code>, etc.
+        For example, <code>'rgb(255,204,0)'</code> or <code>'rgb(255, 204, 0)'</code>.</p>
+      </article>
+    </div>
+  </main>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+  <script>
+    /* =========================================================================
+                                   Helpers
+    ========================================================================= */
+
+
+    //https://stackoverflow.com/questions/10970958/get-a-color-component-from-an-rgb-string-in-javascript
+    function parseRGBString(rgbString){
+      var substring         = rgbString.substring(4, rgbString.length-1);         //Removed 'rgb(' & ')' from string.
+      var substringNoSpaces = substring.replace(/ /g, '');                        //Remove any intervening spaces.
+      var rgbArray          = substringNoSpaces.split(',');                       //Convert to an array.
+      var rgbObject         = { r:+rgbArray[0], g:+rgbArray[1], b:+rgbArray[2] }; //Coerce to numbers and package in object.
+      return rgbObject;
+    }
+
+
+    //https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+    function rgbToHex(r, g, b){
+      function componentToHex(c){
+        var hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+      }
+      return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+    }
+
+
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    //  The original did this:
+    //
+    //      function hexToRgb(hex) {
+    //        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    //        console.log(result);
+    //        return result ? {
+    //          r: parseInt(result[1], 16),
+    //          g: parseInt(result[2], 16),
+    //          b: parseInt(result[3], 16)
+    //        } : null;
+    //      }
+    //
+    ////////////////////////////////////////////////////////////////////////////
+
+
+    //https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+    //Not used in lightenDarkenColor but nice to have.
+    function hexToRgb(hex){
+      var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+      var r = parseInt(result[1], 16);
+      var g = parseInt(result[2], 16);
+      var b = parseInt(result[3], 16);
+      return "rgb(" + r + "," + g + ")";
+    }
+
+
+    /* =========================================================================
+                             lightenDarkenColor()
+    ========================================================================= */
+    // https://css-tricks.com/snippets/javascript/lighten-darken-color/
+    // The original code needed some fixes and enhancements.
+
+
+    function lightenDarkenColor(color, amount){
+      var colorType = '';
+      var number    = null;
+
+
+      //Determine if color is a hex value or an rgb value.
+      //If hex string then just remove '#'.
+      //If rgb string then convert to hex and remove '#'.
+      if (color[0] == "#"){
+        color = color.slice(1);
+
+        if (color.length === 3){
+          var colors = color.split('');
+          color = colors[0] + colors[0] + colors[1] + colors[1]  + colors[2]  + colors[2];
+        } else if (color.length < 6){
+          return color;
+        }
+        colorType = 'hex';
+      }
+      else if (color.substring(0,3) === 'rgb'){
+        colorType     = 'rgb';
+        var rgbObject = parseRGBString(color);
+        color           = rgbToHex(rgbObject.r, rgbObject.g, rgbObject.b);
+        color           = color.slice(1);
+      }
+      else {
+        return color;
+      }
+
+
+      var number = parseInt(color, 16);
+
+
+      var r = (number >> 16) + amount;
+      if (r > 255){    r = 255; }
+      else if (r < 0){ r = 0;   }
+
+
+      var g = ((number >> 8) & 0x00FF) + amount;
+      if (g > 255){     g = 255; }
+      else if  (g < 0){ g = 0;   }
+
+
+      var b = (number & 0x0000FF) + amount;
+      if (b > 255){    b = 255; }
+      else if (b < 0){ b = 0;   }
+
+
+      if (colorType === 'hex'){ return rgbToHex(r, g, b); }
+      return "rgb(" + r + "," + g  + "," + b + ")";
+    }
+
+
+    /* =========================================================================
+                               Test Functions
+    ========================================================================= */
+
+
+    function testLightSpectrum(hexColor){
+      const squaresContainer     = document.createElement('DIV');
+      squaresContainer.className = "d-flex justify-content-center mx-5";
+      for (let i = 0; i < 52; i++){
+        const square        = document.createElement('DIV');
+        square.style.height = '25px';
+        square.style.flex   = '1';
+        square.style.backgroundColor = lightenDarkenColor(hexColor, i * 5);
+        squaresContainer.appendChild(square);
+        console.log(lightenDarkenColor(hexColor, i * 5));
+      }
+      document.body.appendChild(squaresContainer);
+    }
+
+
+    function testDarkSpectrum(hexColor){
+      const squaresContainer     = document.createElement('DIV');
+      squaresContainer.className = "d-flex justify-content-center mx-5";
+      for (let i = 0; i < 52; i++){
+        const square        = document.createElement('DIV');
+        square.style.height = '25px';
+        square.style.flex   = '1';
+        square.style.backgroundColor = lightenDarkenColor(hexColor, i * -5);
+        squaresContainer.appendChild(square);
+        console.log(lightenDarkenColor(hexColor, i * -5));
+      }
+      document.body.appendChild(squaresContainer);
+    }
+
+
+    testDarkSpectrum('#FFF');
+    testLightSpectrum('rgb(0,0,0)');
+  </script>
+</body>
+</html>
